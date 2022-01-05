@@ -1,0 +1,1 @@
+<?php include_once('body_content/component/table-list.php'); ?>
