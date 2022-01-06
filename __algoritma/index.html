@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algoritma</title>
+    <script src="jquery.min.js"></script>
+    <style>
+        .box{
+            position:relatife; 
+            margin:10vh auto;
+            border: solid 2px rgb(15, 15, 15);
+            border-radius: 5px;
+            padding: 1.2em 2em;
+        }
+        .text-center{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div style="width: 65%; margin:10vh auto;">
+    <div>
+        <div id="nilai-cari" class="box text-center" style="display: none;">
+            <p>Cari Nilai</p>
+            <input name="cari-nilai" type="number" min="1" max="999" placeholder="cari nilai" style="width: 100%;">
+            <button onclick="tampilPerintah()">Kembali</button>
+            <button onclick="cariNilaiExe()">Cari</button>
+        </div>
+        <div id="nilai-input" class="box text-center" style="display: none;">
+            <p>Masukan Nilai</p>
+            <input name="input-nilai" type="number" min="1" max="999" placeholder="masukan nilai" style="width: 100%;">
+            <button onclick="tampilPerintah()">Kembali</button>
+            <button onclick="clearNilai()">Bersihkan Nilai</button>
+            <button onclick="sortNilai()">Urutkan Nilai</button>
+            <button onclick="simpanNilai()">Simpan Nilai</button>
+        </div>
+        <div id="nilai-tampil" class="box text-center" style="">
+            <p>Kumpulan Nilai Yang Telah Diinput ( Format JSON )</p>
+            <textarea name="nilai" rows="10" style="width:100%;" disabled></textarea>
+        </div>
+        <div id="perintah" class="box" style="">
+            <p>Perintah:</p>
+            <ol>
+                <li>Input Nilai</li>
+                <li>Sorting</li>
+                <li>Searching</li>
+                <li>Clear</li>
+            </ol>
+            <input name="perintah" type="number" min="1" max="4" placeholder="masukan perintah (1/2/3/4)" style="width: 100%;">
+            <button onclick="panggilPerintah()">Jalankan perintah</button>
+        </div>
+    </div>
+
+</div>
+<script>
+    $(document).ready(function() {
+        renderNilai()
+    })
+
+    sortNilai = () => {
+        let getSessionNilai = sessionStorage.getItem('tempNilai')
+        if (getSessionNilai != undefined || getSessionNilai != null || getSessionNilai != '') {
+            getSessionNilai = JSON.parse(getSessionNilai)
+            getSessionNilai = getSessionNilai.sort(function(a, b){
+                return a-b
+            })
+            sessionStorage.setItem('tempNilai', JSON.stringify(getSessionNilai))
+            renderNilai()
+        }
+    }
+    tampilPerintah = () => {
+        $('[name=perintah]').val(null)
+        $('.box').hide()
+        $('#perintah').show()
+        $('#nilai-tampil').show()
+    }
+    clearNilai = () => {
+        $('input').val(null)
+        sessionStorage.removeItem('tempNilai')
+        renderNilai()
+        tampilPerintah()
+        $('#nilai-tampil').show()
+    }
+    panggilPerintah = () => {
+        let perintah = $('[name=perintah]').val()
+        $('.box').hide()
+        if (perintah == 1) { inputNilai() }
+        else if (perintah == 2) { sortNilai() }
+        else if (perintah == 3) { cariNilai() }
+        else if (perintah == 4) { clearNilai() }
+        else{
+            $('#perintah').show()
+            alert('Perintah tidak ada!');
+        }
+        $('#perintah').show()
+        $('#nilai-tampil').show()
+    }
+    inputNilai = () => {
+        $('#nilai-input').show()
+        $('#nilai-tampil').show()
+    }
+    simpanNilai = () => {
+        let inptNilai = $('[name=input-nilai]').val()
+        inptNilai = parseInt(inptNilai)
+        if(Math.floor(inptNilai) == inptNilai && $.isNumeric(inptNilai)){
+            let getSessionNilai = sessionStorage.getItem('tempNilai')
+            if (getSessionNilai == undefined || getSessionNilai == null || getSessionNilai == '') {
+                getSessionNilai = []
+            }else{
+                getSessionNilai = JSON.parse(getSessionNilai)
+            }
+            getSessionNilai.push(inptNilai)
+            sessionStorage.setItem('tempNilai', JSON.stringify(getSessionNilai))
+            renderNilai()
+        }else{
+            alert('Harap masukan angka (integer)!')
+        }
+        $('input').val(null)
+    }
+    renderNilai = () => {
+        $('#nilai-tampil').show()
+        let getSessionNilai = sessionStorage.getItem('tempNilai')
+        if (getSessionNilai != undefined && getSessionNilai != null && getSessionNilai != '') {
+            $('[name=nilai]').val(getSessionNilai)
+        }else{
+            $('[name=nilai]').val(null)
+        }
+    }
+    cariNilai = () => {
+        $('.box').hide()
+        $('#nilai-cari').show()
+        renderNilai()
+    }
+    cariNilaiExe = () => {
+        let getSessionNilai = sessionStorage.getItem('tempNilai')
+        if (getSessionNilai == undefined || getSessionNilai == null || getSessionNilai == '') {
+            alert('Belum ada nilai yang disimpan')
+        }else{
+            getSessionNilai = JSON.parse(getSessionNilai)
+            let cari = $('[name=cari-nilai]').val()
+            cari = parseInt(cari)
+            cari = getSessionNilai.indexOf(cari)
+            if (cari === -1) {
+                alert('Nilai tidak ditemukan!')
+            }else{
+                cari += 1
+                alert('Nilai ditemukan pada urutan ke-'+cari)
+            }
+        }
+    }
+</script>
+</body>
+</html>
