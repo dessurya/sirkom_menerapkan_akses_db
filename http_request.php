@@ -24,6 +24,12 @@ $configuration = array(
             "getData"
         )
     ),
+    "pelanggan" => array(
+        "logic" => "logic/pelanggan.php",
+        "in_array" => array(
+            "getData", "deletePelanggan", "storePelanggan"
+        )
+    ),
 );
 
 

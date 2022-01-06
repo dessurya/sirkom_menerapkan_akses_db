@@ -85,4 +85,48 @@ class dbMainCRUD
         foreach ($condition as $row) { $query_condition .= " `".$row['field']."` ".$row['operator']." ".$row['value']." ".$row['andor']; }
         return $query_condition;
     }
+
+    public function delete($params, $table)
+    {
+        $sql = "DELETE FROM `".$table."` ";
+        if (isset($params['condition']) and $params['condition'] != null) {
+            $sql .= " WHERE ".$this->getWhereCondition($params['condition']);
+        }
+        $this->connDB->query($sql);
+        return array('sql'=>$sql);
+    }
+
+    public function insert($params, $table)
+    {
+        $field = [];
+        $values = [];
+        $valid = 0;
+        foreach ($params['set'] as $row) { 
+            if (isset($row['field']) and isset($row['value'])) {
+                $field[] = " `".$row['field']."`";
+                $values[] = " '".$row['value']."'";
+                $valid++;
+            }
+        }
+        if ($valid > 0) {
+            $field = implode(", ",$field);
+            $values = implode(", ",$values);
+            $sql = "INSERT INTO `".$table."` (".$field.") VALUES (".$values.")";
+            $this->connDB->query($sql);
+            return array('sql'=>$sql);
+        } else{ return array('id'=>null,'sql'=>null, 'error' => true); }
+    }
+
+    public function update($params, $table)
+    {
+        $set = [];
+        foreach ($params['set'] as $row) { $set[] = $row['field']." = '".$row['value']."'"; }
+        $set = implode(", ",$set);
+        $sql = "UPDATE `".$table."` SET ".$set;
+        if (isset($params['condition']) and $params['condition'] != null) {
+            $sql .= " WHERE ".$this->getWhereCondition($params['condition']);
+        }
+        $this->connDB->query($sql);
+        return array('sql'=>$sql);
+    }
 }
