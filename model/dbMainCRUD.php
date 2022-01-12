@@ -1,23 +1,31 @@
 <?php
-class dbMainCRUD
+// Pembuatan Main Class
+// Untuk koneksi ke database utama
+// Serta membuat fungsi umum secara garis besar ( CRUD )
+
+class dbMainCRUD // pendefinisian nama class
 {
-    public function __construct() {
-        $conn = new mysqli('localhost', 'root', '', 'sirkom_aplp');
-        if ($conn->connect_error) {
+    public function __construct() { // pembuatan class construct yang langsung di eksekusi ketika class di panggil
+        $conn = new mysqli('localhost', 'root', '', 'sirkom_aplp'); // mengakses database
+        if ($conn->connect_error) { // pengecekan akses database
             echo json_encode([
                 'res' => false,
                 'msg' => 'Fail, connected on db main!'
-            ]); die();
+            ]); die(); // pesan error jika gagal mengakses database
         }
         $this->connDB = $conn;
     }
 
+    // pembuatan fungsi select dengan 2 paramater $params & $table
+    // $params : berisiakan array
+    // $table : berisikan string
     public function select($params, $table)
     {
-        $result = [];
+        $result = []; // parameter penampung nilai
+        // Pembentukan query
         $sql = "SELECT * FROM ".$table;
         if (isset($params['condition']) and $params['condition'] != null) {
-            $sql .= " WHERE ".$this->getWhereCondition($params['condition']);
+            $sql .= " WHERE ".$this->getWhereCondition($params['condition']); // pemanggilan fungsi untuk string where
         }
         if (isset($params['group_by']) and $params['group_by'] != null) {
             $sql .= " GROUP BY ".$params['group_by'];
@@ -31,6 +39,7 @@ class dbMainCRUD
         if (isset($params['offset']) and $params['offset'] != null) {
             $sql .= " OFFSET ".$params['offset'];
         }
+        // Pembentukan query
 
         if($result_query = $this->connDB->query($sql)){
             while ($row = $result_query->fetch_array(MYSQLI_ASSOC)) { $result[] = $row; }

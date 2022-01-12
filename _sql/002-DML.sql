@@ -1,13 +1,5 @@
 -- asdqwe123 -- password
 
-TRUNCATE TABLE `level`;
-TRUNCATE TABLE `user`;
-TRUNCATE TABLE `tarif`;
-TRUNCATE TABLE `pelanggan`;
-TRUNCATE TABLE `penggunaan`;
-TRUNCATE TABLE `tagihan`;
-TRUNCATE TABLE `pembayaran`;
-
 INSERT INTO `level` (`nama_level`) VALUES ('kasir'), ('manajer'), ('administrator');
 INSERT INTO `user` (`username`, `password`, `nama_admin`, `id_level`) VALUES 
     ('kasir01', 'YXNkcXdlMTIz', 'user kasir 1', 1),
