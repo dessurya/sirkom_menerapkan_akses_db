@@ -19,12 +19,21 @@ function getData($input)
     if (count($input['condition']) > 0) {
         $params['condition'] = [];
         foreach ($input['condition'] as $key => $value) {
-            $params['condition'][] = [
-                "field" => $key,
-                "operator" => 'LIKE',
-                "value" => '\'%'.$value.'%\'',
-                "andor" => 'AND',
-            ];
+            if ($key == 'id_pelanggan') {
+                $params['condition'][] = [
+                    "field" => $key,
+                    "operator" => '=',
+                    "value" => $value,
+                    "andor" => 'AND',
+                ];
+            }else{
+                $params['condition'][] = [
+                    "field" => $key,
+                    "operator" => 'LIKE',
+                    "value" => '\'%'.$value.'%\'',
+                    "andor" => 'AND',
+                ];
+            }
         }
         $params['condition'][count($input['condition'])-1]['andor'] = '';
     }
