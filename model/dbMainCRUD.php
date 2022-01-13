@@ -13,7 +13,7 @@ class dbMainCRUD // pendefinisian nama class
     
     private function connToDb()
     {
-        $conn = new mysqli('localhost', 'root', '', 'sirkom_aplp'); // mengakses database
+        $conn = new mysqli('localhost', 'u5017997_adm_asd', '1sampai10', 'u5017997_sirkom'); // mengakses database
         if ($conn->connect_error) { // pengecekan akses database
             echo json_encode([
                 'res' => false,
@@ -80,24 +80,24 @@ class dbMainCRUD // pendefinisian nama class
     public function paginate($params, $table)
     {
         $call_data = $this->select($params, $table);
-        return $call_data;
-        return [
-            'from' => 1,
-            'to' => 1,
-            'total' => 1,
-            'current_page' => $params['page'],
-            'last_page' => 1,
-            'data' => $call_data['data'],
-        ];
-        // mysqli_close($this->connDB);
-        // $this->connToDb();
-        // $count_all_data = $this->selectCount($params, $table);
-        // $count_all_data = $count_all_data['data'];
-        // $to = $params['offset']+$params['limit'];
-        // if ($to > $count_all_data) { $to = $count_all_data; }
-        // $max_page = $count_all_data/$params['limit'];
-        // $max_page = ceil($max_page);
-        // if ($max_page == 0) { $max_page = 1; }
+        // return $call_data;
+        // return [
+        //     'from' => 1,
+        //     'to' => 1,
+        //     'total' => 1,
+        //     'current_page' => $params['page'],
+        //     'last_page' => 1,
+        //     'data' => $call_data['data'],
+        // ];
+        mysqli_close($this->connDB);
+        $this->connToDb();
+        $count_all_data = $this->selectCount($params, $table);
+        $count_all_data = $count_all_data['data'];
+        $to = $params['offset']+$params['limit'];
+        if ($to > $count_all_data) { $to = $count_all_data; }
+        $max_page = $count_all_data/$params['limit'];
+        $max_page = ceil($max_page);
+        if ($max_page == 0) { $max_page = 1; }
         return [
             'from' => $params['offset']+1,
             'to' => $to,
