@@ -32,7 +32,7 @@ class dbMainCRUD // pendefinisian nama class
         // Pembentukan query
         $sql = "SELECT * FROM ".$table;
         if (isset($params['condition']) and $params['condition'] != null) {
-            $sql .= " WHERE ".$this->getWhereCondition($params['condition']); // pemanggilan fungsi untuk string where
+            $sql .= $this->getWhereCondition($params['condition']); // pemanggilan fungsi untuk string where
         }
         if (isset($params['group_by']) and $params['group_by'] != null) {
             $sql .= " GROUP BY ".$params['group_by'];
@@ -66,7 +66,7 @@ class dbMainCRUD // pendefinisian nama class
     public function selectCount($params, $table)
     {
         $sql = "SELECT COUNT(*) AS count_data FROM ".$table;
-        if (isset($params['condition']) and $params['condition'] != null) { $sql .= " WHERE ".$this->getWhereCondition($params['condition']); }
+        if (isset($params['condition']) and $params['condition'] != null) { $sql .= $this->getWhereCondition($params['condition']); }
         $result_query = $this->connDB->query($sql);
         while ($row = $result_query->fetch_array(MYSQLI_ASSOC)) { 
             $count_data = $row['count_data'];
@@ -116,6 +116,7 @@ class dbMainCRUD // pendefinisian nama class
                 $query_condition .= " `".$row['field']."` ".$row['operator']." ".$row['value']." ".$row['andor'];
             }
         }
+        if ($query_condition != "") { $query_condition = " WHERE ".$query_condition; }
         return $query_condition;
     }
 
@@ -123,7 +124,7 @@ class dbMainCRUD // pendefinisian nama class
     {
         $sql = "DELETE FROM `".$table."` ";
         if (isset($params['condition']) and $params['condition'] != null) {
-            $sql .= " WHERE ".$this->getWhereCondition($params['condition']);
+            $sql .= $this->getWhereCondition($params['condition']);
         }
         $this->connDB->query($sql);
         return array('sql'=>$sql);
@@ -157,7 +158,7 @@ class dbMainCRUD // pendefinisian nama class
         $set = implode(", ",$set);
         $sql = "UPDATE `".$table."` SET ".$set;
         if (isset($params['condition']) and $params['condition'] != null) {
-            $sql .= " WHERE ".$this->getWhereCondition($params['condition']);
+            $sql .= $this->getWhereCondition($params['condition']);
         }
         $this->connDB->query($sql);
         return array('sql'=>$sql);
